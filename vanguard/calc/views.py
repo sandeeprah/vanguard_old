@@ -108,6 +108,8 @@ def json_response(input):
 @app.route('/pdf/calculate/<path:calc_path>', methods=['POST'])
 def convert_pdf(calc_path):
     response = {}
+    options = {}
+    options['header-html'] ='dummy'
     try:
         req = request.get_json()
         if ('doc' not in req):
@@ -160,7 +162,8 @@ def convert_pdf(calc_path):
             'javascript-delay': 300,
             'enable-javascript': None,
             'debug-javascript': None,
-            '--encoding': "utf-8"
+            '--encoding': "utf-8",
+            'header-html':''
         }
 
         user_home_dir = str(Path.home())
@@ -175,14 +178,15 @@ def convert_pdf(calc_path):
         context_header['doc_no'] = doc_no
         context_header['date'] = change_date_format(date)
         add_pdf_header(options, context_header=context_header)
-
         pdf = pdfkit.from_string(main_content, False, configuration=config, options=options, css=css_path)
         response = pdf_response(pdf)
     except Exception as e:
         print(str(e))
-        response = str(e)
+        response['message'] = str(e)
+        return json_response(response), 400
     finally:
-        os.remove(options['header-html'])
+        if (os. path. isfile(options['header-html'])):
+            os.remove(options['header-html'])
 
     return response
 
