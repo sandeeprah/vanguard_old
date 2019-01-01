@@ -108,82 +108,82 @@ def json_response(input):
 @app.route('/pdf/calculate/<path:calc_path>', methods=['POST'])
 def convert_pdf(calc_path):
     response = {}
-    req = request.get_json()
-    if ('doc' not in req):
-        errors['message'] = "'resource' missing in request"
-        return json_response(errors), 400
-    print ("received document for pdf conversion")
-    docRaw = req['doc']
-    basicSchema = sDocPrj()
-    docParsed = basicSchema.load(docRaw)
-    if (len(docParsed.errors) > 0):
-        response["message"] = "The Document Meta Information has errors"
-        response["schemaErrors"] = docParsed.errors
-        return json_response(errors), 400
-
-    doc = docParsed.data
-    doc_string = json.dumps(doc, indent=4)
-    project_no= doc['meta']['project_no']
-    project_title= doc['meta']['project_title']
-    docClass_code = doc['meta']['docClass_code']
-    title = doc["meta"]["docInstance_title"]
-    doc_no = doc['meta']['doc_no']
-    rev = doc['meta']['rev']
-    date = doc['meta']['date']
-
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    calc_path = os.path.sep.join(calc_path.strip('/').split('/'))
-    doc_html_path = os.path.join('root', calc_path, 'doc.html')
-    main_content = render_template(doc_html_path, doc=doc_string)
-
-    options = {
-        'page-size' : 'A4',
-        'margin-top':'25mm',
-        'margin-bottom':'19mm',
-        'margin-left':'19mm',
-        'margin-right':'19mm',
-        'encoding':'UTF-8',
-        'print-media-type' : None,
-#            'header-left' : 'My Static Header',
-        'header-line' : None,
-        'header-font-size' : '8',
-        'header-font-name' : 'Calibri',
-        'header-spacing' : '5',
-        'footer-left' : "www.codecalculation.com",
-        'footer-line' : None,
-        'footer-font-size' : '8',
-        'footer-font-name' : 'Calibri',
-        'footer-spacing' : '5',
-        'disable-smart-shrinking' : None,
-        'no-stop-slow-scripts' : None,
-        'javascript-delay': 300,
-        'enable-javascript': None,
-        'debug-javascript': None,
-        '--encoding': "utf-8"
-    }
-
-    user_home_dir = str(Path.home())
-    wkhtmltopdf_path = os.path.join(user_home_dir, 'wkhtmltox/bin/wkhtmltopdf')
-    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    this_folderpath = os.path.dirname(os.path.abspath(__file__))
-    css_path = os.path.join(this_folderpath, 'print.css')
-
-    context_header = {}
-    context_header['title'] = title
-    context_header['rev'] = rev
-    context_header['doc_no'] = doc_no
-    context_header['date'] = change_date_format(date)
-    add_pdf_header(options, context_header=context_header)
-
     try:
+        req = request.get_json()
+        if ('doc' not in req):
+            errors['message'] = "'resource' missing in request"
+            return json_response(errors), 400
+        print ("received document for pdf conversion")
+        docRaw = req['doc']
+        basicSchema = sDocPrj()
+        docParsed = basicSchema.load(docRaw)
+        if (len(docParsed.errors) > 0):
+            response["message"] = "The Document Meta Information has errors"
+            response["schemaErrors"] = docParsed.errors
+            return json_response(errors), 400
+
+        doc = docParsed.data
+        doc_string = json.dumps(doc, indent=4)
+        project_no= doc['meta']['project_no']
+        project_title= doc['meta']['project_title']
+        docClass_code = doc['meta']['docClass_code']
+        title = doc["meta"]["docInstance_title"]
+        doc_no = doc['meta']['doc_no']
+        rev = doc['meta']['rev']
+        date = doc['meta']['date']
+
+        curr_dir = os.path.dirname(os.path.abspath(__file__))
+        calc_path = os.path.sep.join(calc_path.strip('/').split('/'))
+        doc_html_path = os.path.join('root', calc_path, 'doc.html')
+        main_content = render_template(doc_html_path, doc=doc_string)
+
+        options = {
+            'page-size' : 'A4',
+            'margin-top':'25mm',
+            'margin-bottom':'19mm',
+            'margin-left':'19mm',
+            'margin-right':'19mm',
+            'encoding':'UTF-8',
+            'print-media-type' : None,
+    #            'header-left' : 'My Static Header',
+            'header-line' : None,
+            'header-font-size' : '8',
+            'header-font-name' : 'Calibri',
+            'header-spacing' : '5',
+            'footer-left' : "www.codecalculation.com",
+            'footer-line' : None,
+            'footer-font-size' : '8',
+            'footer-font-name' : 'Calibri',
+            'footer-spacing' : '5',
+            'disable-smart-shrinking' : None,
+            'no-stop-slow-scripts' : None,
+            'javascript-delay': 300,
+            'enable-javascript': None,
+            'debug-javascript': None,
+            '--encoding': "utf-8"
+        }
+
+        user_home_dir = str(Path.home())
+        wkhtmltopdf_path = os.path.join(user_home_dir, 'wkhtmltox/bin/wkhtmltopdf')
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        this_folderpath = os.path.dirname(os.path.abspath(__file__))
+        css_path = os.path.join(this_folderpath, 'print.css')
+
+        context_header = {}
+        context_header['title'] = title
+        context_header['rev'] = rev
+        context_header['doc_no'] = doc_no
+        context_header['date'] = change_date_format(date)
+        add_pdf_header(options, context_header=context_header)
+
         pdf = pdfkit.from_string(main_content, False, configuration=config, options=options, css=css_path)
+        response = pdf_response(pdf)
     except Exception as e:
         print(str(e))
-        return (str(e))
+        response = str(e)
     finally:
         os.remove(options['header-html'])
 
-    response = pdf_response(pdf)
     return response
 
 
