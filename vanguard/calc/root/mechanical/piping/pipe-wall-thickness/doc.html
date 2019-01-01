@@ -25,7 +25,8 @@ pipe wall thickness calculation  ASME B31.3
   </nav>
   <table class="main">
     <thead>
-        <tr class="noborder">
+        <tr style='border-top:0px;'>
+          <th style='border-left:0px;'>&nbsp;</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
@@ -34,8 +35,7 @@ pipe wall thickness calculation  ASME B31.3
           <th>&nbsp;</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
+          <th style='border-right:0px;'>&nbsp;</th>
         </tr>
     </thead>
     <tfoot>
@@ -44,15 +44,17 @@ pipe wall thickness calculation  ASME B31.3
           </td>
     </tfoot>
     <tbody>
-      <tr class="header">
+      <tr class="section_title">
         <td></td>
         <td colspan="8" class="has-text-centered">
             <h1 class="title is-5">[[ doc['meta']['docClass_title'] ]]</h1>
         </td>
         <td></td>
       </tr>
-      <tr class="nosideborder">
-        <td colspan="10">&nbsp;</td>
+      <tr>
+        <td style='border-left:0px;'>&nbsp;</td>
+        <td colspan="8">&nbsp;</td>
+        <td style='border-right:0px;'>&nbsp;</td>
       </tr>
       <tr class="header">
         <td></td>
@@ -111,10 +113,12 @@ pipe wall thickness calculation  ASME B31.3
         </td>
         <td></td>
       </tr>
-      <tr class="nosideborder">
-        <td  colspan="10">&nbsp;</td>
+      <tr>
+        <td style='border-left:0px;'>&nbsp;</td>
+        <td colspan="8">&nbsp;</td>
+        <td style='border-right:0px;'>&nbsp;</td>
       </tr>
-      <tr class="header">
+      <tr class="section_title">
         <td></td>
         <td colspan="8">
           <h2 class="title is-6">Inputs</h2>
@@ -320,12 +324,14 @@ pipe wall thickness calculation  ASME B31.3
 
       </tbody>
 
-      <tbody class="hideprint">
-        <tr class="nosideborder">
-          <td colspan="10">&nbsp;</td>
+      <tbody >
+        <tr>
+          <td style='border-left:0px;'>&nbsp;</td>
+          <td colspan="8">&nbsp;</td>
+          <td style='border-right:0px;'>&nbsp;</td>
         </tr>
-        <tr class="noborder">
-          <td></td>
+        <tr class="hideprint" style='border-top:0px;'>
+          <td style='border-left:0px;'></td>
           <td colspan="8" style="text-align:center" >
             <span class="w8">
               <button class="button is-primary" @click="calculate" style="width:100%">Calculate</button>
@@ -334,22 +340,24 @@ pipe wall thickness calculation  ASME B31.3
               <button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">Units</button>
             </span>
             <span class="w8">
-              <button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">Save</button>
+              <button class="button is-primary" @click="saveDoc()" style="width:100%">Save</button>
             </span>
             <span class="w8">
-              <button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">Load</button>
+              <button class="button is-primary" @click="openModal('uploadModalisActive')" style="width:100%">Load</button>
             </span>
             <span class="w8">
-              <button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">PDF</button>
+              <button class="button is-primary" @click="pdf_download()" style="width:100%">PDF</button>
             </span>
             <span class="w8">
-              <button class="button is-primary" @click="openModal('unitsModalisActive')" style="width:100%">Help</button>
+              <button class="button is-primary" @click="launch_help" style="width:100%">Help</button>
             </span>
           </td>
-          <td></td>
+          <td style='border-right:0px;'></td>
         </tr>
-        <tr class="noborder">
-          <td colspan="10">&nbsp;</td>
+        <tr style='border-top:0px;' class="hideprint">
+          <td style='border-left:0px;'>&nbsp;</td>
+          <td style='border-top:0px;'colspan="8">&nbsp;</td>
+          <td style='border-right:0px;'>&nbsp;</td>
         </tr>
       </tbody>
 
@@ -372,7 +380,7 @@ pipe wall thickness calculation  ASME B31.3
       </tbody>
 
       <tbody>
-      <tr class="header">
+      <tr class="section_title">
         <td></td>
         <td colspan="8">
           <h2 class="title is-6">Results</h2>
@@ -385,7 +393,6 @@ pipe wall thickness calculation  ASME B31.3
           <span class="w14">NPS</span>
           <span class="w8"></span>
           <span class="w6 result"> [[ getResult(['NPS']) ]]</span>
-<!--          <span class="w6 result"> [[ retSilent(doc, ['result', 'NPS', '_val']) ]]</span> -->
         </td>
         <td colspan="2">
         </td>

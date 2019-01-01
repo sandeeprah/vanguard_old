@@ -7,6 +7,10 @@ var app_doc = {
 
     },
     computed : {
+      url_subpath : function(){
+        return window.location.pathname.slice(4);
+      },
+
       dimensions_used: function() {
           dimensions = []
           for (var dimension in this.doc.units) {
@@ -34,19 +38,72 @@ var app_doc = {
       }
     },
     methods : {
+
+      saveDoc: function() {
+          mydata = JSON.stringify(this.doc, null, 2);
+          save_anchor = this.$refs['save_anchor']
+          save_anchor.download = "formData-" + new Date().getTime();
+          save_anchor.href = "data:text/plain," + encodeURIComponent(mydata);
+          save_anchor.click();
+      },
+
       calculate : function(){
           fn_success =function(){};
           this.doc['result'] ={};
           this.doc['errors'] =[];
-          calculation_url = this.doc['api_url']
+          calculation_url = "/api"+ this.url_subpath;
           this.process_resource("doc", calculation_url, fn_success);
+      },
+
+      pdf_download: function() {
+          var app = this;
+          app.reset_message();
+          pdf_url = "/pdf"+ this.url_subpath;
+
+          var data = {};
+          data['doc'] = app['doc'];
+          var json_data = JSON.stringify(data);
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', pdf_url, true);
+          xhr.responseType = "arraybuffer";
+          xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+          app.loadingModalisActive =true;
+
+          xhr.onload = function(e){
+              if (xhr.readyState == 4 && xhr.status == "200"){
+                  var blob = new Blob([xhr.response], {type: "application/pdf"});
+                  var link = document.createElement('a');
+                  link.href = window.URL.createObjectURL(blob);
+                  link.download = 'PDF Report.pdf';
+                  link.click();
+                  app.loadingModalisActive =false;
+              }
+              else{
+                  app.errorStatus = xhr.status + " " + xhr.statusText;
+                  app.errorMessage = "Error occured in PDF Download"
+                  app.errorisActive = true;
+                  app.isLoading = false;
+                  app.loadingModalisActive =false;
+              }
+          };
+          xhr.onerror = function (e) {
+              xhr.responseType = "text";
+              app.handle_connection_errors();
+              app.loadingModalisActive =false;
+          };
+          xhr.send(json_data);
+      },
+
+      launch_help : function(){
+        help_url = "/static"+ this.url_subpath + "help.html";
+        window.open(help_url, 'helpwindow',"height=640,width=960,toolbar=no,menubar=no,scrollbars=no,location=no,status=no");
       },
 
 
       getErrs: function(path_array) {
           try{
               var app = this;
-              xval = this.retSilent(app['schema_errors']['input'], path_array);
+              xval = this.retSilent(app['schemaErrors']['input'], path_array);
               if (xval instanceof Array){
                    return xval
                  }
@@ -58,23 +115,6 @@ var app_doc = {
          },
 
 
-/*
-      getErrs: function(path_array) {
-          try{
-
-              val = this.response['schema_errors']['input'];
-              total_length = path_array.length;
-              for (i = 0; i < total_length; i++) {
-                  key = path_array[i];
-                  val = val[key];
-              }
-              return val;
-          }
-          catch (err) {
-              return [];
-          }
-      },
-*/
       getResult: function(path_array) {
           try{
              var app = this;

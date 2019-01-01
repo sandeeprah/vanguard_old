@@ -120,11 +120,7 @@ div.datasheet {
 }
 
 
-.datasheet table.main tr.noborder{
-  border: 0px;
-}
-
-.datasheet table.main tr.header{
+.datasheet table.main tr.section_title{
   background-color: antiquewhite;
 }
 
@@ -149,26 +145,6 @@ div.datasheet {
 .datasheet table.main tr td:last-child, .datasheet table.main tr th:last-child {
     width: 2em;
     border-right: 1px solid black;
-}
-
-.datasheet table.main tr.nosideborder td:first-child, .datasheet table.main tr.nosideborder th:first-child  {
-    width: 2em;
-    border-left: 0px solid black;
-}
-
-.datasheet table.main tr.nosideborder td:last-child, .datasheet table.main tr.nosideborder th:last-child  {
-    width: 2em;
-    border-right: 0px solid black;
-}
-
-.datasheet table.main tr.noborder td:first-child, .datasheet table.main tr.noborder th:first-child  {
-    width: 2em;
-    border-left: 0px solid black;
-}
-
-.datasheet table.main tr.noborder td:last-child, .datasheet table.main tr.noborder th:last-child  {
-    width: 2em;
-    border-right: 0px solid black;
 }
 
 .datasheet input {

@@ -257,7 +257,7 @@ class sDoc(Schema):
 '''
 class sDocPrj(Schema):
 #    _id = fields.String(required=True)
-    api_url = fields.String(required=True)
+    sub_url = fields.String(required=True)
     meta = fields.Nested(sMeta, required=True)
     units = fields.Nested(sUnits)
     input = fields.Dict(required = True)

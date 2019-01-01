@@ -5,8 +5,8 @@ var app_common = {
         message: "",
         messageType: "",
         messageIsActive: false,
-        schema_errors : {},
-        error_status : {}
+        schemaErrors : {},
+        errorStatus : {}
     },
 
     computed : {
@@ -18,19 +18,19 @@ var app_common = {
 
     methods : {
 
-      openModal: function(modalisActive) {
-          this[modalisActive] = true;
-          this.reset_message();
-          burgerMain = document.getElementById('burgerMain');
-          navMenu = document.getElementById('navMenu');
-          burgerMain.classList.remove('is-active');
-          navMenu.classList.remove('is-active');
-      },
+        openModal: function(modalisActive) {
+            this[modalisActive] = true;
+            this.reset_message();
+            burgerMain = document.getElementById('burgerMain');
+            navMenu = document.getElementById('navMenu');
+            burgerMain.classList.remove('is-active');
+            navMenu.classList.remove('is-active');
+        },
 
-      closeModal: function(modalisActive) {
-          this[modalisActive] = false;
-          this.reset_message();
-      },
+        closeModal: function(modalisActive) {
+            this[modalisActive] = false;
+            this.reset_message();
+        },
 
         hide_message: function() {
             this.messageIsActive = false;
@@ -40,7 +40,7 @@ var app_common = {
             this.message = "";
             this.messageType = "";
             this.messageIsActive = false;
-            this.schema_errors = {}
+            this.schemaErrors = {}
         },
 
         store_message : function(){
@@ -357,7 +357,7 @@ var app_common = {
 
         handle_errors : function(xhr){
             console.error(xhr.response);
-            this.error_status = xhr.status + " " + xhr.statusText;
+            this.errorStatus = xhr.status + " " + xhr.statusText;
             try {
                 response = JSON.parse(xhr.responseText);
                 if (response.hasOwnProperty("message")){
@@ -366,11 +366,11 @@ var app_common = {
                 else{
                   this.message = xhr.responseText;
                 }
-                if (response.hasOwnProperty("schema_errors")){
-                  this.schema_errors = response["schema_errors"];
+                if (response.hasOwnProperty("schemaErrors")){
+                  this.schemaErrors = response["schemaErrors"];
                 }
                 else{
-                  this.schema_errors = {};
+                  this.schemaErrors = {};
                 }
             }
             catch (e) {
@@ -382,7 +382,7 @@ var app_common = {
         },
 
         handle_connection_errors : function(){
-            this.error_status = "Unknown Error";
+            this.errorStatus = "Unknown Error";
             this.message = "Server Response not received";
             this.messageType = 'error'
             this.messageisActive = true;
